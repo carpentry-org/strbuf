@@ -1,0 +1,335 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <link rel="stylesheet" href="../style.css">
+    </head>
+    <body>
+        <div class="content">
+            <div class="logo">
+                <a href="https://github.com/carpentry-org/strbuf">
+                    <img src="">
+                </a>
+                <div class="title">
+                    strbuf
+                </div>
+                <div class="index">
+                    <ul>
+                        <li>
+                            <a href="StringBuf.html">
+                                StringBuf
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <h1>
+                    StringBuf
+                </h1>
+                <div class="module-description">
+                    <p>is a growable string buffer for efficient incremental
+string building. Unlike <code>String.append</code> (which allocates a new string on
+every call), <code>StringBuf</code> tracks capacity and grows geometrically, giving
+amortized O(1) appends.</p>
+<h2>Installation</h2>
+<pre><code>(load &quot;git@github.com:carpentry-org/strbuf@0.1.0&quot;)
+</code></pre>
+<h2>Usage</h2>
+<pre><code>(let [sb (StringBuf.create)]
+  (do
+    (StringBuf.append-str &amp;sb &quot;hello&quot;)
+    (StringBuf.append-char &amp;sb \space)
+    (StringBuf.append-str &amp;sb &quot;world&quot;)
+    (println* &amp;(StringBuf.to-string &amp;sb))
+    (StringBuf.delete sb)))
+</code></pre>
+
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#append-bytes">
+                        <h3 id="append-bytes">
+                            append-bytes
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a), (Ref (Array Byte) b)] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>appends raw bytes to the buffer.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#append-char">
+                        <h3 id="append-char">
+                            append-char
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a), Char] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>appends a single character to the buffer.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#append-crlf">
+                        <h3 id="append-crlf">
+                            append-crlf
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a)] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>appends \r\n (HTTP line ending).</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#append-double">
+                        <h3 id="append-double">
+                            append-double
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a), Double] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>appends a double as its string representation.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#append-int">
+                        <h3 id="append-int">
+                            append-int
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a), Int] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>appends an integer as its decimal string representation.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#append-str">
+                        <h3 id="append-str">
+                            append-str
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a), (Ref String b)] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>appends a string to the buffer.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#clear">
+                        <h3 id="clear">
+                            clear
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a)] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>resets the buffer to empty without freeing memory.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#copy">
+                        <h3 id="copy">
+                            copy
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a)] StringBuf)
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#create">
+                        <h3 id="create">
+                            create
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [] StringBuf)
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>creates an empty StringBuf with default capacity (256 bytes).</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#delete">
+                        <h3 id="delete">
+                            delete
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [StringBuf] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>frees the buffer.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#length">
+                        <h3 id="length">
+                            length
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a)] Int)
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>returns the current length of the buffer in bytes.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#str">
+                        <h3 id="str">
+                            str
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a)] String)
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>returns a copy of the buffer contents as a String without
+modifying the buffer.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#to-string">
+                        <h3 id="to-string">
+                            to-string
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a)] String)
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>returns the buffer contents as an owned String and resets
+the buffer to empty. The buffer's allocation is kept for reuse.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#with-capacity">
+                        <h3 id="with-capacity">
+                            with-capacity
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [Int] StringBuf)
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>creates an empty StringBuf with the given initial capacity.</p>
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

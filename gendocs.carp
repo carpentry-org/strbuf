@@ -1,0 +1,22 @@
+(load "strbuf.carp")
+
+(Project.config "title" "strbuf")
+(Project.config "docs-directory" "./docs/")
+(Project.config "docs-logo" "")
+(Project.config "docs-url" "https://github.com/carpentry-org/strbuf")
+(Project.config "docs-styling" "../style.css")
+(Project.config "docs-prelude" "A growable string buffer for Carp. Provides
+amortized O(1) appends, unlike `String.append` which allocates on every call.
+
+### Usage
+```
+(let [sb (StringBuf.create)]
+  (do
+    (StringBuf.append-str &sb \"hello \")
+    (StringBuf.append-int &sb 42)
+    (println* &(StringBuf.to-string &sb))
+    (StringBuf.delete sb)))
+```")
+
+(save-docs StringBuf)
+(quit)
