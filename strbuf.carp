@@ -1,0 +1,72 @@
+(doc StringBuf "is a growable string buffer for efficient incremental
+string building. Unlike `String.append` (which allocates a new string on
+every call), `StringBuf` tracks capacity and grows geometrically, giving
+amortized O(1) appends.
+
+## Installation
+
+```
+(load \"git@github.com:carpentry-org/strbuf@0.1.0\")
+```
+
+## Usage
+
+```
+(let [sb (StringBuf.create)]
+  (do
+    (StringBuf.append-str &sb \"hello\")
+    (StringBuf.append-char &sb \\space)
+    (StringBuf.append-str &sb \"world\")
+    (println* &(StringBuf.to-string &sb))
+    (StringBuf.delete sb)))
+```")
+
+(relative-include "src/strbuf.h")
+(register-type StringBuf)
+
+(defmodule StringBuf
+  (doc create "creates an empty StringBuf with default capacity (256 bytes).")
+  (register create (Fn [] StringBuf))
+
+  (doc with-capacity "creates an empty StringBuf with the given initial capacity.")
+  (register with-capacity (Fn [Int] StringBuf))
+
+  (doc append-str "appends a string to the buffer.")
+  (register append-str (Fn [&StringBuf &String] ()))
+
+  (doc append-char "appends a single character to the buffer.")
+  (register append-char (Fn [&StringBuf Char] ()))
+
+  (doc append-bytes "appends raw bytes to the buffer.")
+  (register append-bytes (Fn [&StringBuf &(Array Byte)] ()))
+
+  (doc append-int "appends an integer as its decimal string representation.")
+  (register append-int (Fn [&StringBuf Int] ()))
+
+  (doc append-double "appends a double as its string representation.")
+  (register append-double (Fn [&StringBuf Double] ()))
+
+  (doc append-crlf "appends \\r\\n (HTTP line ending).")
+  (register append-crlf (Fn [&StringBuf] ()))
+
+  (doc length "returns the current length of the buffer in bytes.")
+  (register length (Fn [&StringBuf] Int))
+
+  (doc to-string "returns the buffer contents as an owned String and resets
+the buffer to empty. The buffer's allocation is kept for reuse.")
+  (register to-string (Fn [&StringBuf] String))
+
+  (doc str "returns a copy of the buffer contents as a String without
+modifying the buffer.")
+  (register str (Fn [&StringBuf] String))
+  (implements str StringBuf.str)
+
+  (doc clear "resets the buffer to empty without freeing memory.")
+  (register clear (Fn [&StringBuf] ()))
+
+  (doc delete "frees the buffer.")
+  (register delete (Fn [StringBuf] ()))
+
+  (register copy (Fn [&StringBuf] StringBuf))
+  (implements copy StringBuf.copy)
+)

@@ -1,0 +1,96 @@
+(load "Test.carp")
+(load "../strbuf.carp")
+(use Test)
+
+(deftest test
+  (assert-equal test
+    "hello"
+    &(let [sb (StringBuf.create)]
+      (do (StringBuf.append-str &sb "hello")
+          (let [s (StringBuf.to-string &sb)]
+            (do (StringBuf.delete sb) s))))
+    "append-str and to-string")
+
+  (assert-equal test
+    "abc"
+    &(let [sb (StringBuf.create)]
+      (do (StringBuf.append-char &sb \a)
+          (StringBuf.append-char &sb \b)
+          (StringBuf.append-char &sb \c)
+          (let [s (StringBuf.to-string &sb)]
+            (do (StringBuf.delete sb) s))))
+    "append-char builds string")
+
+  (assert-equal test
+    "n=42"
+    &(let [sb (StringBuf.create)]
+      (do (StringBuf.append-str &sb "n=")
+          (StringBuf.append-int &sb 42)
+          (let [s (StringBuf.to-string &sb)]
+            (do (StringBuf.delete sb) s))))
+    "append-int")
+
+  (assert-equal test
+    "ok\r\n"
+    &(let [sb (StringBuf.create)]
+      (do (StringBuf.append-str &sb "ok")
+          (StringBuf.append-crlf &sb)
+          (let [s (StringBuf.to-string &sb)]
+            (do (StringBuf.delete sb) s))))
+    "append-crlf")
+
+  (assert-equal test
+    0
+    (let [sb (StringBuf.create)]
+      (let [l (StringBuf.length &sb)]
+        (do (StringBuf.delete sb) l)))
+    "empty buffer has length 0")
+
+  (assert-equal test
+    5
+    (let [sb (StringBuf.create)]
+      (do (StringBuf.append-str &sb "hello")
+          (let [l (StringBuf.length &sb)]
+            (do (StringBuf.delete sb) l))))
+    "length after append")
+
+  (assert-equal test
+    ""
+    &(let [sb (StringBuf.create)]
+      (do (StringBuf.append-str &sb "hello")
+          (StringBuf.clear &sb)
+          (let [s (StringBuf.to-string &sb)]
+            (do (StringBuf.delete sb) s))))
+    "clear resets to empty")
+
+  (assert-equal test
+    "hello"
+    &(let [sb (StringBuf.create)]
+      (do (StringBuf.append-str &sb "hello")
+          (let [s1 (StringBuf.str &sb)
+                s2 (StringBuf.str &sb)]
+            (do (StringBuf.delete sb)
+                (ignore s2)
+                s1))))
+    "str copies without consuming")
+
+  (assert-equal test
+    "second"
+    &(let [sb (StringBuf.create)]
+      (do (StringBuf.append-str &sb "first")
+          (ignore (StringBuf.to-string &sb))
+          (StringBuf.append-str &sb "second")
+          (let [s (StringBuf.to-string &sb)]
+            (do (StringBuf.delete sb) s))))
+    "to-string resets, buffer is reusable")
+
+  ; Test large append (triggers reallocation)
+  (assert-equal test
+    1000
+    (let [sb (StringBuf.create)]
+      (do (for [i 0 1000]
+            (StringBuf.append-char &sb \x))
+          (let [l (StringBuf.length &sb)]
+            (do (StringBuf.delete sb) l))))
+    "1000 char appends")
+)
