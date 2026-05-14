@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <link rel="stylesheet" href="../style.css">
+    </head>
+    <body>
+        <div class="content">
+            <a href="https://github.com/carpentry-org/strbuf">
+                <div class="logo">
+                    <img src="" alt="Logo">
+                    <div class="index">
+                        <ul>
+                            <li>
+                                <a href="StringBuf.html">
+                                    StringBuf
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h1>
+                        strbuf
+                    </h1>
+                    <p>A growable string buffer for Carp. Provides
+amortized O(1) appends, unlike <code>String.append</code> which allocates on every call.</p>
+<h3>Usage</h3>
+<pre><code>(let [sb (StringBuf.create)]
+  (do
+    (StringBuf.append-str &amp;sb &quot;hello &quot;)
+    (StringBuf.append-int &amp;sb 42)
+    (println* &amp;(StringBuf.to-string &amp;sb))
+    (StringBuf.delete sb)))
+</code></pre>
+
+                </div>
+            </a>
+        </div>
+    </body>
+</html>

@@ -28,7 +28,8 @@ amortized O(1) appends.
   (doc create "creates an empty StringBuf with default capacity (256 bytes).")
   (register create (Fn [] StringBuf))
 
-  (doc with-capacity "creates an empty StringBuf with the given initial capacity.")
+  (doc with-capacity
+    "creates an empty StringBuf with the given initial capacity.")
   (register with-capacity (Fn [Int] StringBuf))
 
   (doc append-str "appends a string to the buffer.")
@@ -68,5 +69,4 @@ modifying the buffer.")
   (register delete (Fn [StringBuf] ()))
 
   (register copy (Fn [&StringBuf] StringBuf))
-  (implements copy StringBuf.copy)
-)
+  (implements copy StringBuf.copy))
