@@ -82,4 +82,31 @@
     (let-do [sb (StringBuf.create)]
       (for [i 0 1000] (StringBuf.append-char &sb \x))
       (let-do [l (StringBuf.length &sb)] (StringBuf.delete sb) l))
-    "1000 char appends"))
+    "1000 char appends")
+
+  (assert-equal test
+    "pi=3.14"
+    &(let-do [sb (StringBuf.create)]
+      (StringBuf.append-str &sb "pi=")
+      (StringBuf.append-double &sb 3.14)
+      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+    "append-double")
+
+  (assert-equal test
+    "abc"
+    &(let-do [sb (StringBuf.create)
+              bytes [(Byte.from-int 97) (Byte.from-int 98) (Byte.from-int 99)]]
+      (StringBuf.append-bytes &sb &bytes)
+      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+    "append-bytes")
+
+  (assert-equal test
+    "hello"
+    &(let-do [sb (StringBuf.create)]
+      (StringBuf.append-str &sb "hello")
+      (let-do [sb2 (StringBuf.copy &sb)
+               s (StringBuf.to-string &sb2)]
+        (StringBuf.delete sb)
+        (StringBuf.delete sb2)
+        s))
+    "copy produces independent clone"))
