@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 #define STRBUF_DEFAULT_CAP 256
 
@@ -70,6 +71,34 @@ void StringBuf_append_MINUS_double(StringBuf* sb, double n) {
   strbuf_grow(sb, slen);
   memcpy(sb->data + sb->len, tmp, slen);
   sb->len += slen;
+}
+
+void StringBuf_append_MINUS_long(StringBuf* sb, Long n) {
+  char tmp[24];
+  int slen = snprintf(tmp, sizeof(tmp), "%" PRId64, n);
+  strbuf_grow(sb, slen);
+  memcpy(sb->data + sb->len, tmp, slen);
+  sb->len += slen;
+}
+
+void StringBuf_append_MINUS_float(StringBuf* sb, float n) {
+  char tmp[64];
+  int slen = snprintf(tmp, sizeof(tmp), "%g", (double)n);
+  strbuf_grow(sb, slen);
+  memcpy(sb->data + sb->len, tmp, slen);
+  sb->len += slen;
+}
+
+void StringBuf_append_MINUS_bool(StringBuf* sb, bool b) {
+  if (b) {
+    strbuf_grow(sb, 4);
+    memcpy(sb->data + sb->len, "true", 4);
+    sb->len += 4;
+  } else {
+    strbuf_grow(sb, 5);
+    memcpy(sb->data + sb->len, "false", 5);
+    sb->len += 5;
+  }
 }
 
 void StringBuf_append_MINUS_crlf(StringBuf* sb) {
