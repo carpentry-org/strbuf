@@ -93,6 +93,32 @@
     "append-double")
 
   (assert-equal test
+    "n=42"
+    &(let-do [sb (StringBuf.create)]
+      (StringBuf.append-str &sb "n=")
+      (StringBuf.append-long &sb 42l)
+      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+    "append-long")
+
+  (assert-equal test
+    "x=1.5"
+    &(let-do [sb (StringBuf.create)]
+      (StringBuf.append-str &sb "x=")
+      (StringBuf.append-float &sb 1.5f)
+      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+    "append-float")
+
+  (assert-equal test
+    "yes=true no=false"
+    &(let-do [sb (StringBuf.create)]
+      (StringBuf.append-str &sb "yes=")
+      (StringBuf.append-bool &sb true)
+      (StringBuf.append-str &sb " no=")
+      (StringBuf.append-bool &sb false)
+      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+    "append-bool")
+
+  (assert-equal test
     "abc"
     &(let-do [sb (StringBuf.create)
               bytes [(Byte.from-int 97) (Byte.from-int 98) (Byte.from-int 99)]]

@@ -47,6 +47,16 @@ amortized O(1) appends.
   (doc append-double "appends a double as its string representation.")
   (register append-double (Fn [&StringBuf Double] ()))
 
+  (doc append-long "appends a long as its decimal string representation.")
+  (register append-long (Fn [&StringBuf Long] ()))
+
+  (doc append-float "appends a float as its string representation.")
+  (register append-float (Fn [&StringBuf Float] ()))
+
+  (doc append-bool
+    "appends a bool as \\342\\200\\234true\\342\\200\\235 or \\342\\200\\234false\\342\\200\\235.")
+  (register append-bool (Fn [&StringBuf Bool] ()))
+
   (doc append-crlf "appends \\r\\n (HTTP line ending).")
   (register append-crlf (Fn [&StringBuf] ()))
 
