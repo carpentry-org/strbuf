@@ -35,7 +35,7 @@ string building. Unlike <code>String.append</code> (which allocates a new string
 every call), <code>StringBuf</code> tracks capacity and grows geometrically, giving
 amortized O(1) appends.</p>
 <h2>Installation</h2>
-<pre><code>(load &quot;git@github.com:carpentry-org/strbuf@0.1.0&quot;)
+<pre><code>(load &quot;git@github.com:carpentry-org/strbuf@0.2.0&quot;)
 </code></pre>
 <h2>Usage</h2>
 <pre><code>(let [sb (StringBuf.create)]
@@ -47,6 +47,26 @@ amortized O(1) appends.</p>
     (StringBuf.delete sb)))
 </code></pre>
 
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#append-bool">
+                        <h3 id="append-bool">
+                            append-bool
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a), Bool] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>appends a bool as \342\200\234true\342\200\235 or \342\200\234false\342\200\235.</p>
+
+                    </p>
                 </div>
                 <div class="binder">
                     <a class="anchor" href="#append-bytes">
@@ -129,6 +149,26 @@ amortized O(1) appends.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#append-float">
+                        <h3 id="append-float">
+                            append-float
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a), Float] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>appends a float as its string representation.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#append-int">
                         <h3 id="append-int">
                             append-int
@@ -145,6 +185,26 @@ amortized O(1) appends.</p>
                     </span>
                     <p class="doc">
                         <p>appends an integer as its decimal string representation.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#append-long">
+                        <h3 id="append-long">
+                            append-long
+                        </h3>
+                    </a>
+                    <div class="description">
+                        external
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref StringBuf a), Long] ())
+                    </p>
+                    <span>
+                        
+                    </span>
+                    <p class="doc">
+                        <p>appends a long as its decimal string representation.</p>
 
                     </p>
                 </div>

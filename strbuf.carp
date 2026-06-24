@@ -6,7 +6,7 @@ amortized O(1) appends.
 ## Installation
 
 ```
-(load \"git@github.com:carpentry-org/strbuf@0.1.0\")
+(load \"git@github.com:carpentry-org/strbuf@0.2.0\")
 ```
 
 ## Usage

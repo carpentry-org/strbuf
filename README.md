@@ -5,7 +5,7 @@ A growable string buffer for Carp.
 ## Installation
 
 ```clojure
-(load "git@github.com:carpentry-org/strbuf@0.1.0")
+(load "git@github.com:carpentry-org/strbuf@0.2.0")
 ```
 
 ## Usage
