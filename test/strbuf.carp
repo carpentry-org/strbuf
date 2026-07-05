@@ -148,4 +148,11 @@
     0
     (let [sb (StringBuf.with-capacity 0)]
       (let-do [l (StringBuf.length &sb)] (StringBuf.delete sb) l))
-    "with-capacity 0 falls back to default capacity"))
+    "with-capacity 0 yields an empty buffer")
+
+  (assert-equal test
+    "hello"
+    &(let-do [sb (StringBuf.with-capacity 0)]
+      (StringBuf.append-str &sb "hello")
+      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+    "with-capacity 0 buffer grows and is usable"))
