@@ -5,7 +5,7 @@ A growable string buffer for Carp.
 ## Installation
 
 ```clojure
-(load "git@github.com:carpentry-org/strbuf@0.2.0")
+(load "git@github.com:carpentry-org/strbuf@0.2.1")
 ```
 
 ## Usage
@@ -45,7 +45,7 @@ allocates a new string on every call.
 ## Testing
 
 ```
-carp -x test/strbuf.carp
+carp -x --log-memory test/strbuf.carp
 ```
 
 <hr/>

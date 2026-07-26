@@ -22,7 +22,7 @@ jobs:
       - name: Run tests
         run: |
           set -euo pipefail
-          carp -x test/strbuf.carp
+          carp -x --log-memory test/strbuf.carp
 
       - name: Install angler
         run: |
