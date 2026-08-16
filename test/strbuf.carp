@@ -161,6 +161,6 @@
     0l
     (do
       (Debug.reset-memory-balance!)
-      (let [sb (StringBuf.create)] ())
+      (let [_sb (StringBuf.create)] ())
       (Debug.memory-balance))
     "owned buffers are deleted automatically at scope exit"))
