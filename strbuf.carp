@@ -53,8 +53,7 @@ amortized O(1) appends.
   (doc append-float "appends a float as its string representation.")
   (register append-float (Fn [&StringBuf Float] ()))
 
-  (doc append-bool
-    "appends a bool as \\342\\200\\234true\\342\\200\\235 or \\342\\200\\234false\\342\\200\\235.")
+  (doc append-bool "appends a bool as `true` or `false`.")
   (register append-bool (Fn [&StringBuf Bool] ()))
 
   (doc append-crlf "appends \\r\\n (HTTP line ending).")
