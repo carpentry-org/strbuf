@@ -129,6 +129,14 @@ String StringBuf_str(StringBuf* sb) {
   return s;
 }
 
+/* Consumes the buffer and hands its allocation over to the returned String.
+   No copy is made and nothing is freed: the String owns the memory now. */
+String StringBuf_into_MINUS_string(StringBuf sb) {
+  strbuf_grow(&sb, 1);
+  sb.data[sb.len] = '\0';
+  return sb.data;
+}
+
 void StringBuf_clear(StringBuf* sb) {
   sb->len = 0;
 }

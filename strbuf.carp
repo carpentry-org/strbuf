@@ -6,7 +6,7 @@ amortized O(1) appends.
 ## Installation
 
 ```
-(load \"git@github.com:carpentry-org/strbuf@0.2.1\")
+(load \"git@github.com:carpentry-org/strbuf@0.3.0\")
 ```
 
 ## Usage
@@ -17,9 +17,19 @@ amortized O(1) appends.
     (StringBuf.append-str &sb \"hello\")
     (StringBuf.append-char &sb \\space)
     (StringBuf.append-str &sb \"world\")
-    (println* &(StringBuf.to-string &sb))
-    (StringBuf.delete sb)))
-```")
+    (println* &(StringBuf.str &sb))))
+```
+
+## Ownership
+
+Buffers are managed like any other Carp value: an owned `StringBuf` is
+deleted when it goes out of scope, copied by `@`, and moved when it is
+passed on. You never call `StringBuf.delete` yourself.
+
+To get a `String` out of a buffer, pick by what you want to happen to the
+buffer: `str` copies the contents and leaves the buffer alone, `to-string`
+copies them and resets the buffer for reuse, and `into-string` consumes the
+buffer and hands its allocation to the `String` without copying.")
 
 (relative-include "src/strbuf.h")
 (register-type StringBuf)
@@ -66,15 +76,27 @@ amortized O(1) appends.
 the buffer to empty. The buffer's allocation is kept for reuse.")
   (register to-string (Fn [&StringBuf] String))
 
+  (doc into-string "consumes the buffer and returns its contents as an owned
+String. The buffer's allocation is handed over to the String, so nothing is
+copied and nothing is freed.")
+  (register into-string (Fn [StringBuf] String))
+
   (doc str "returns a copy of the buffer contents as a String without
 modifying the buffer.")
   (register str (Fn [&StringBuf] String))
   (implements str StringBuf.str)
 
+  (doc prn "returns a copy of the buffer contents as a String without
+modifying the buffer.")
+  (defn prn [sb] (StringBuf.str sb))
+  (implements prn StringBuf.prn)
+
   (doc clear "resets the buffer to empty without freeing memory.")
   (register clear (Fn [&StringBuf] ()))
 
-  (doc delete "frees the buffer.")
+  (doc delete "frees the buffer. This implements the `delete` interface, which
+means Carp calls it for you when an owned buffer goes out of scope; you should
+not need to call it directly.")
   (register delete (Fn [StringBuf] ()))
   (implements delete StringBuf.delete)
 

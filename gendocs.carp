@@ -8,14 +8,16 @@
 (Project.config "docs-prelude" "A growable string buffer for Carp. Provides
 amortized O(1) appends, unlike `String.append` which allocates on every call.
 
+Buffers are managed by Carp: an owned `StringBuf` is deleted when it goes out
+of scope, so `delete` is never called by hand.
+
 ### Usage
 ```
-(let [sb (StringBuf.create)]
-  (do
-    (StringBuf.append-str &sb \"hello \")
-    (StringBuf.append-int &sb 42)
-    (println* &(StringBuf.to-string &sb))
-    (StringBuf.delete sb)))
+(defn greeting [name]
+  (let-do [sb (StringBuf.create)]
+    (StringBuf.append-str &sb \"hello, \")
+    (StringBuf.append-str &sb name)
+    (StringBuf.into-string sb)))
 ```")
 
 (save-docs StringBuf)

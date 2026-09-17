@@ -2,12 +2,19 @@
 (load "../strbuf.carp")
 (use Test)
 
+; a buffer that is built, handed back, and never deleted by hand
+(defn build [s] (let-do [sb (StringBuf.create)] (StringBuf.append-str &sb s) sb))
+
+(defn consume [sb] (StringBuf.length &sb))
+
+(deftype Holder [buf StringBuf])
+
 (deftest test
   (assert-equal test
     "hello"
     &(let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "hello")
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "append-str and to-string")
 
   (assert-equal test
@@ -16,7 +23,7 @@
       (StringBuf.append-char &sb \a)
       (StringBuf.append-char &sb \b)
       (StringBuf.append-char &sb \c)
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "append-char builds string")
 
   (assert-equal test
@@ -24,7 +31,7 @@
     &(let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "n=")
       (StringBuf.append-int &sb 42)
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "append-int")
 
   (assert-equal test
@@ -32,20 +39,19 @@
     &(let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "ok")
       (StringBuf.append-crlf &sb)
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "append-crlf")
 
   (assert-equal test
     0
-    (let [sb (StringBuf.create)]
-      (let-do [l (StringBuf.length &sb)] (StringBuf.delete sb) l))
+    (StringBuf.length &(StringBuf.create))
     "empty buffer has length 0")
 
   (assert-equal test
     5
     (let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "hello")
-      (let-do [l (StringBuf.length &sb)] (StringBuf.delete sb) l))
+      (StringBuf.length &sb))
     "length after append")
 
   (assert-equal test
@@ -53,7 +59,7 @@
     &(let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "hello")
       (StringBuf.clear &sb)
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "clear resets to empty")
 
   (assert-equal test
@@ -61,10 +67,7 @@
     &(let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "hello")
       (let-do [s1 (StringBuf.str &sb)
-               s2 (StringBuf.str &sb)]
-        (StringBuf.delete sb)
-        (ignore s2)
-        s1))
+               s2 (StringBuf.str &sb)] (ignore s2) s1))
     "str copies without consuming")
 
   (assert-equal test
@@ -73,7 +76,7 @@
       (StringBuf.append-str &sb "first")
       (ignore (StringBuf.to-string &sb))
       (StringBuf.append-str &sb "second")
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "to-string resets, buffer is reusable")
 
   ; Test large append (triggers reallocation)
@@ -81,7 +84,7 @@
     1000
     (let-do [sb (StringBuf.create)]
       (for [i 0 1000] (StringBuf.append-char &sb \x))
-      (let-do [l (StringBuf.length &sb)] (StringBuf.delete sb) l))
+      (StringBuf.length &sb))
     "1000 char appends")
 
   (assert-equal test
@@ -89,7 +92,7 @@
     &(let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "pi=")
       (StringBuf.append-double &sb 3.14)
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "append-double")
 
   (assert-equal test
@@ -97,7 +100,7 @@
     &(let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "n=")
       (StringBuf.append-long &sb 42l)
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "append-long")
 
   (assert-equal test
@@ -105,7 +108,7 @@
     &(let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "x=")
       (StringBuf.append-float &sb 1.5f)
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "append-float")
 
   (assert-equal test
@@ -115,7 +118,7 @@
       (StringBuf.append-bool &sb true)
       (StringBuf.append-str &sb " no=")
       (StringBuf.append-bool &sb false)
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "append-bool")
 
   (assert-equal test
@@ -123,44 +126,118 @@
     &(let-do [sb (StringBuf.create)
               bytes [(Byte.from-int 97) (Byte.from-int 98) (Byte.from-int 99)]]
       (StringBuf.append-bytes &sb &bytes)
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "append-bytes")
 
   (assert-equal test
     "hello"
     &(let-do [sb (StringBuf.create)]
       (StringBuf.append-str &sb "hello")
-      (let-do [sb2 (StringBuf.copy &sb)
-               s (StringBuf.to-string &sb2)]
-        (StringBuf.delete sb)
-        (StringBuf.delete sb2)
-        s))
+      (let [sb2 @&sb] (StringBuf.to-string &sb2)))
     "copy produces independent clone")
 
   (assert-equal test
     "hello"
     &(let-do [sb (StringBuf.with-capacity 4)]
       (StringBuf.append-str &sb "hello")
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "with-capacity grows past initial capacity")
 
   (assert-equal test
     0
-    (let [sb (StringBuf.with-capacity 0)]
-      (let-do [l (StringBuf.length &sb)] (StringBuf.delete sb) l))
+    (StringBuf.length &(StringBuf.with-capacity 0))
     "with-capacity 0 yields an empty buffer")
 
   (assert-equal test
     "hello"
     &(let-do [sb (StringBuf.with-capacity 0)]
       (StringBuf.append-str &sb "hello")
-      (let-do [s (StringBuf.to-string &sb)] (StringBuf.delete sb) s))
+      (StringBuf.to-string &sb))
     "with-capacity 0 buffer grows and is usable")
 
+  (assert-equal test
+    "hello"
+    &(StringBuf.into-string (build "hello"))
+    "into-string returns the contents")
+
+  (assert-equal test
+    ""
+    &(StringBuf.into-string (StringBuf.create))
+    "into-string on an empty buffer")
+
+  (assert-equal test
+    "full"
+    &(let-do [sb (StringBuf.with-capacity 4)]
+      (StringBuf.append-str &sb "full")
+      (StringBuf.into-string sb))
+    "into-string terminates a buffer that is exactly full")
+
+  (assert-equal test
+    "hello"
+    &(StringBuf.prn &(build "hello"))
+    "prn shows the buffer contents")
+
+  ; Ownership: the compiler deletes buffers for us, in every position
   (assert-equal test
     0l
     (do
       (Debug.reset-memory-balance!)
       (let [_sb (StringBuf.create)] ())
       (Debug.memory-balance))
-    "owned buffers are deleted automatically at scope exit"))
+    "owned buffers are deleted automatically at scope exit")
+
+  (assert-equal test
+    0l
+    (do
+      (Debug.reset-memory-balance!)
+      (let [_sb (build "returned")] ())
+      (Debug.memory-balance))
+    "buffers returned from a function are deleted")
+
+  (assert-equal test
+    0l
+    (do
+      (Debug.reset-memory-balance!)
+      (ignore (consume (build "moved")))
+      (Debug.memory-balance))
+    "buffers moved into a function are deleted by the callee")
+
+  (assert-equal test
+    0l
+    (do
+      (Debug.reset-memory-balance!)
+      (let [sb (build "copied")] (let [_sb2 @&sb] ()))
+      (Debug.memory-balance))
+    "copies are deleted independently")
+
+  (assert-equal test
+    0l
+    (do
+      (Debug.reset-memory-balance!)
+      (let [_a [(build "one") (build "two")]] ())
+      (Debug.memory-balance))
+    "buffers inside an array are deleted")
+
+  (assert-equal test
+    0l
+    (do
+      (Debug.reset-memory-balance!)
+      (let [_h (Holder.init (build "held"))] ())
+      (Debug.memory-balance))
+    "buffers inside a struct are deleted")
+
+  (assert-equal test
+    0l
+    (do
+      (Debug.reset-memory-balance!)
+      (ignore (StringBuf.into-string (build "consumed")))
+      (Debug.memory-balance))
+    "into-string hands the allocation over without leaking")
+
+  (assert-equal test
+    0l
+    (do
+      (Debug.reset-memory-balance!)
+      (StringBuf.delete (build "manual"))
+      (Debug.memory-balance))
+    "explicit delete still works and does not double free"))
